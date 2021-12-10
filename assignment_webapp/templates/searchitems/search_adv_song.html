@@ -1,0 +1,251 @@
+<html>
+{% include 'top.html' %}
+<div class="content">
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    .box{
+        height: 400px;
+        width: 400px;
+        margin: 20px auto;
+    }
+    .search{
+        width: auto;
+        height: 45px;
+        margin-bottom: 0px;
+    }
+    .show{
+        display: none;
+        margin-top: 0px;
+        height: 300px;
+        width: 250px;
+        border: #eee solid 1px;
+        overflow: scroll;
+    }
+    #val{
+        padding-left: 20px;
+        height: 40px;
+        width: 230px;
+    }
+    #sub{
+        height: 40px;
+        width: 80px;
+    }
+    .show p{
+        margin-top: 0px;
+        margin-bottom: 0px;
+        color: grey;
+        padding-left: 15px;
+    }
+</style>
+    <div class="container details">
+        <h1 class="title"> Advance Search Song </h1>
+            <form class="Add" method="POST" action="{{url_for('advance_search_song')}}">
+
+            Song title: <input type="text" id="movie_title" name="song_title"  placeholder="Enter Song Name" onkeyup="checkTitle(this)">
+                        <div class="show" id ="show_title"></div>
+                <br/><br/>
+
+            Length: <input type="text" name="song_length" placeholder=">200 (greater than 200)"> (Symbol and numbers must be entered with no spaces between them)
+            <br/><br/>
+
+            Song Genre: <input id="movie_genre" type="text" name="song_genre"  placeholder="Enter the Genre" onkeyup="checkMovieGenre(this)">
+            <div class="show" id ="show_genre"></div>
+                <br/><br/>
+
+            Song Artist: <input id="song_artist" type="text" name="song_artistid"  placeholder="Enter Artist Name" onkeyup="checkSongArtist(this)">
+            <div class="show" id ="show_artist"></div>
+            <br/><br/><br/>
+
+            <button class="flat" type="submit">Search</button>
+            <br/>
+            </form>
+    </div>
+
+            {% if songs | length > 0 %}
+                <!-- All Songs -->
+                <table class="styled">
+                    <thead>
+                        <tr>
+                            <td>Song ID</td>
+                            <td>Song Name</td>
+                            <td>Artists</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instance in songs %}
+                            <!-- Each row is a link to each individual tvshow page -->
+                            <tr class="clickable-tr" data-href="{{ url_for('single_song', song_id=instance.song_id)}}">
+                                <td style="text-align: center">{{ instance.song_id }}</td>
+                                <td style="text-align: center">{{ instance.song_title }}</td>
+                                <td>{{instance.artist}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            {% endif %}
+<script type="text/javascript" >
+
+        var str = "";
+        var show_title = document.getElementById('show_title');
+        var show_genre = document.getElementById('show_genre');
+        var show_artist = document.getElementById("show_artist");
+
+        function checkTitle(btn){
+            console.log("click!")
+            var year = []
+            show_title.style.display='list-item';
+            $.ajax({
+            url: "http://127.0.0.1:5000/getSongName",
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                year = data['name'];
+                str = "";
+                let count = 0;
+                if(year.length > 0){
+                    for (let i = 0; i < year.length; i++) {
+                        if(year[i].indexOf(btn.value) !== -1){
+                            count++;
+                            str += '<p>' + year[i] + '</p>';
+                        }
+                    }
+                }
+                if(count === 0){
+                    str = '<p>' + "No related information" + '</p>'
+                }
+
+                show_title.innerHTML= str;
+                var arrayList = show_title.getElementsByTagName("p");
+                for (let i = 0; i < arrayList.length && count !== 0; i++) {
+                    arrayList[i].addEventListener('click',function(){
+                    btn.value=arrayList[i].innerText;
+                });
+                }
+
+                str = "";
+            },
+
+
+        })
+
+
+        }
+
+        function checkMovieGenre(btn){
+            console.log("click!")
+            var movies = []
+            show_genre.style.display='list-item';
+            $.ajax({
+            url: "http://127.0.0.1:5000/getSongGenre",
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                movies = data['name'];
+                str = "";
+                let count = 0;
+                if(movies.length > 0){
+                    for (let i = 0; i < movies.length; i++) {
+                        if(movies[i].indexOf(btn.value) !== -1){
+                            count++;
+                            str += '<p>' + movies[i] + '</p>';
+                        }
+                    }
+                }
+                if(count === 0){
+                    str = '<p>' + "No related information" + '</p>'
+                }
+
+                show_genre.innerHTML= str;
+                var arrayList = show_genre.getElementsByTagName("p");
+                for (let i = 0; i < arrayList.length && count !== 0; i++) {
+                    arrayList[i].addEventListener('click',function(){
+                    btn.value=arrayList[i].innerText;
+                });
+                }
+
+                str = "";
+            },
+
+
+        })
+
+
+        }
+
+        function checkSongArtist(btn){
+            var artists = []
+            show_artist.style.display='list-item';
+            $.ajax({
+            url: "http://127.0.0.1:5000/getSongArtist",
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                artists = data['name'];
+                str = "";
+                let count = 0;
+                if(artists.length > 0){
+                    for (let i = 0; i < artists.length; i++) {
+                        if(artists[i].indexOf(btn.value) !== -1){
+                            count++;
+                            str += '<p>' + artists[i] + '</p>';
+                        }
+                    }
+                }
+                if(count === 0){
+                    str = '<p>' + "No related information" + '</p>'
+                }
+
+                show_artist.innerHTML= str;
+                var arrayList = show_artist.getElementsByTagName("p");
+                for (let i = 0; i < arrayList.length && count !== 0; i++) {
+                    arrayList[i].addEventListener('click',function(){
+                    btn.value=arrayList[i].innerText;
+                });
+                }
+
+                str = "";
+            },
+
+
+        })
+
+
+        }
+
+
+
+        var the_genre_box = document.getElementById("movie_genre")
+        the_genre_box.onblur = function (){
+            setTimeout("clear(show_genre)", 1000)
+        }
+
+        var the_artist_box = document.getElementById("song_artist");
+        the_artist_box.onblur = function (){
+            setTimeout("clear(show_artist)", 1000)
+        }
+
+        var the_title_box = document.getElementById("movie_title")
+        the_title_box.onblur = function (){
+            setTimeout("clear(show_title)", 1000)
+        }
+
+
+
+
+        function clear(element) {
+            str = "";
+            element.innerHTML= str;
+            element.style.display= 'none';
+        }
+
+
+    </script>
+</div>
+
+{% include 'bottom.html'%}
+</html>
+

@@ -1,0 +1,59 @@
+{% include 'top.html' %}
+	<head>
+		<meta charset="{CHARSET}">
+		<title></title>
+		<style type="text/css">
+            .adv_movie{
+                padding: 38px 50px;
+                text-align: center;
+                color: #2b2b2b;
+                font-size: 30px;
+                border-radius: 8px;
+                margin-top:20px;
+                margin-left:100px;
+                background-color: #c0c0c0;
+                position:absolute;}
+
+            .adv_tvshows{
+                padding: 38px 29px;
+                text-align: center;
+                color: #2b2b2b;
+                font-size: 30px;
+                border-radius: 8px;
+                margin-top:150px;
+                margin-left:100px;
+                background-color: #acbad5;
+                position:absolute;}
+
+            .adv_podcast{
+                padding: 38px 30px;
+                text-align: center;
+                color: #2b2b2b;
+                font-size: 30px;
+                border-radius: 8px;
+                margin-top:20px;
+                margin-left:600px;
+                background-color: #A5D6D9;
+                position:absolute;}
+
+            .adv_song{
+                padding: 38px 52px;
+                text-align: center;
+                color: #2b2b2b;
+                font-size: 30px;
+                border-radius: 8px;
+                margin-top:150px;
+                margin-left:600px;
+                background-color: #C6B3E6;
+                position:absolute;}
+		</style>
+	</head>
+	<body>
+        <div class="content" ><h1 class="title">Advance Search Choices</h1></div>
+        <div><a class="adv_movie" href="{{ url_for('advance_search_movie' ) }}">Advanced Search - Movie</a></div>
+        <div><a class="adv_tvshows" href="{{ url_for('advance_search_tvshows' ) }}">Advanced Search - TvShows</a></div>
+        <div><a class="adv_podcast" href="{{ url_for('advance_search_podcast' ) }}">Advanced Search - Podcast</a></div>
+        <div><a class="adv_song" href="{{ url_for('advance_search_song' ) }}">Advanced Search - Song</a></div>
+	</body>
+{% include 'bottom.html'%}
+

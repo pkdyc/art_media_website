@@ -1,0 +1,89 @@
+{% include 'top.html' %}
+<div class="content">
+    <div class="container details">
+        <!-- TODO Query (6)
+        Display All Relevant Podcast Infromation including meta data
+        Display All Relevant Podcast Episodes for this Podcast
+        -->
+        <h1 style="mso-title-page: yes"> {{podcast[0].podcast_id}} : {{podcast[0].podcast_name}} </h1>
+        {% if podcast | length > 0 %}
+            <br/>
+            <hr/>
+            <h3> Artworks </h3>
+            {% for instance in podcast %}
+                {% if instance.md_type_name == 'artwork' %}
+                    <img src="{{instance.md_value}}" alt="image" style="max-width:50%;overflow:hidden;">
+                    <br/>© Spotify Public Domain 2019.
+                {% endif %}
+            {% endfor %}
+            <br/>
+            <h3> Descriptions </h3>
+            {% for instance in podcast %}
+                {% if instance.md_type_name == 'description' %}
+                    <div>
+                        {{instance.md_value}}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <br/>
+
+
+        <!-- TODO - Query (10)
+        You will have to modify the above approach slightly to make each genre clickable
+        -->
+
+            <div>
+                <table class="styled">
+                    <h3> Genres </h3>
+
+                    {% for instance in podcast %}
+                        {% if instance.md_type_name == 'podcast genre' %}
+                            <tr class="clickable-tr" data-href="{{ url_for('single_genre', genre_id=instance.md_value)}}">
+                                <td style="text-align: center">{{ instance.md_value }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+
+
+
+
+
+                <!-- Podcast Episodes -->
+                <h3>Episodes for {{podcast[0].podcast_name}}</h3>
+                <table class="styled">
+                    <thead>
+                        <tr>
+                            <td>Podcast Episode Media ID</td>
+                            <td>Podcast Episode Title</td>
+                            <td>Podcast Episode URI</td>
+                            <td>Podcast Episode Published Date</td>
+                            <td>Podcast Episode Length</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Add a for loop to iterate over the episodes -->
+                        {% for instance in podcastep %}
+                            <!-- Each row is a link to each individual song page -->
+                            {% if instance.md_type_name == 'artwork' %}
+                                <tr class="clickable-tr" data-href="{{ url_for('single_podcastep',media_id=instance.podcast_episode_id)}}">
+                                    <td style="text-align: center">{{ instance.podcast_episode_id }}</td>
+                                    <td style="text-align: center">{{ instance.podcast_episode_title }}</td>
+                                    <td style="text-align: center">{{ instance.podcast_episode_uri }}</td>
+                                    <td style="text-align: center">{{ instance.podcast_episode_date_published }}</td>
+                                    <td style="text-align: center">{{ instance.podcast_episode_length }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+        {% else %}
+            <h2 class="title"> Invalid Media ID</h2>
+        {% endif %}
+    </div>
+</div>
+{% include 'bottom.html'%}

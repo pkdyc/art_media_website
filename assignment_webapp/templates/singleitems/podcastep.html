@@ -1,0 +1,53 @@
+{% include 'top.html' %}
+<div class="content">
+    <div class="container details">
+
+        {% if podcastep | length > 0 %}
+            <h2 class="title"> {{podcastep[0].media_id}} : {{podcastep[0].podcast_episode_title}}</h2>
+            <br/>
+            {{podcastep[0].podcast_episode_title}} is {{podcastep[0].podcast_episode_length}} seconds long.
+            <br><br>
+            Published in {{podcastep[0].podcast_episode_published_date}}
+            <br/>
+            <hr/>
+            <h3> Artworks </h3>
+            {% for instance in podcastep %}
+                {% if instance.md_type_name == 'artwork' %}
+                    <img src="{{instance.md_value}}" alt="image" style="max-width:50%;overflow:hidden;">
+                    <br/>© Spotify Public Domain 2019.
+                {% endif %}
+            {% endfor %}
+            <br/>
+            <h3> Descriptions </h3>
+            {% for instance in podcastep %}
+                {% if instance.md_type_name == 'description' %}
+                    <div>
+                        {{instance.md_value}}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <h3> Source </h3>
+                    <div>
+                        {{podcastep[0].podcast_episode_uri}}
+                    </div>
+
+            <br/>
+            <h3> Genres </h3>
+            {% for instance in songmetadata %}
+                {% if instance.md_type_name == 'song genre' %}
+                    <div>
+                        {{instance.md_value}}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <h2 class="title"> Invalid Media ID</h2>
+        {% endif %}
+
+
+        <!-- TODO - Query (10)
+        You will have to modify the above approach slightly to make each genre clickable
+        -->
+    </div>
+</div>
+{% include 'bottom.html'%}

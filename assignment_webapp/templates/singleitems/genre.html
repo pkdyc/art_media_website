@@ -1,0 +1,134 @@
+{% include 'top.html' %}
+<div class="content">
+    <div class="container details">
+        <!--  Example of a table with clickable rows:
+        <table class="styled">
+                    <thead>
+                        <tr>
+                            <td>Column 1 Heading - Usually an ID </td>
+                            <td>Column 2 Heading</td>
+                                      .
+                                      .
+                                      .
+                            <td>Column n Heading</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instance in some_input_array %}
+                        <tr class="clickable-tr" data-href="{{ url_for('single_item_target', target_id=instance.single_item_target_id)}}">
+                            <td style="text-align: center">{{ instance.single_item_target_id }}</td>
+                            <td>{{instance.item_corresponding_to_column_2}}</td>
+                                      .
+                                      .
+                                      .
+                            <td>{{instance.item_corresponding_to_column_n}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+        -->
+        <!-- TODO Query (10) -->
+        <!-- First check should be a valid instance -->
+        <!-- Second check should be what type of genre? -->
+        {% if page.type == 'songs' %}
+            <div>
+        <!-- All All Songs -->
+                <table class="styled">
+                    <thead>
+                        <tr>
+                            <td>Item ID</td>
+                            <td>Item Title</td>
+                            <td>ItemType</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instance in songs %}
+                            <!-- Each row is a link to each individual song page -->
+                            <tr class="clickable-tr" data-href="{{ url_for('single_song', song_id=instance.item_id)}}">
+                                <td style="text-align: center">{{ instance.item_id }}</td>
+                                <td>{{instance.item_name}}</td>
+                                <td>{{instance.item_type}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </table>
+        {% endif %}
+
+
+        {% if page.type == 'postcasts' %}
+            <table class="styled">
+                    <thead>
+                        <tr>
+                            <td>Item ID</td>
+                            <td>Item Title</td>
+                            <td>ItemType</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instance in postcasts %}
+                            <!-- Each row is a link to each individual song page -->
+                            <tr class="clickable-tr" data-href="{{ url_for('single_podcast', podcast_id=instance.item_id)}}">
+                                <td style="text-align: center">{{ instance.item_id }}</td>
+                                <td>{{instance.item_name}}</td>
+                                <td>{{instance.item_type}}</td>
+                            </tr>
+
+
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+        {% endif %}
+
+
+        {% if page.type == 'films' %}
+            <table class="styled">
+                    <thead>
+                        <tr>
+                            <td>Item ID</td>
+                            <td>Item Title</td>
+                            <td>ItemType</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for instance in films %}
+                            <!-- Each row is a link to each individual song page -->
+                            {% if instance.item_type == 'Moive' %}
+                                <tr class="clickable-tr" data-href="{{ url_for('single_movie', movie_id=instance.item_id)}}">
+                                    <td style="text-align: center">{{ instance.item_id }}</td>
+                                    <td>{{instance.item_title}}</td>
+                                    <td>{{instance.item_type}}</td>
+                                </tr>
+                            {% endif %}
+
+
+                            {% if instance.item_type != 'Moive' %}
+                                <tr class="clickable-tr" data-href="{{ url_for('single_tvshow', tvshow_id=instance.item_id)}}">
+                                    <td style="text-align: center">{{ instance.item_id }}</td>
+                                    <td>{{instance.item_title}}</td>
+                                    <td>{{instance.item_type}}</td>
+                                </tr>
+                            {% endif %}
+
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+        {% endif %}
+
+
+        {% if page.type == 'invalid' %}
+            <h2 class="title"> Invalid Genre Type, Please try again</h2>
+        {% endif %}
+
+
+    </div>
+</div>
+{% include 'bottom.html'%}

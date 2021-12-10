@@ -1,0 +1,199 @@
+<html>
+{% include 'top.html' %}
+<div class="content">
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    .box{
+        height: 400px;
+        width: 400px;
+        margin: 20px auto;
+    }
+    .search{
+        width: auto;
+        height: 45px;
+        margin-bottom: 0px;
+    }
+    .show{
+        display: none;
+        margin-top: 0px;
+        height: 300px;
+        width: 250px;
+        border: #eee solid 1px;
+        overflow: scroll;
+    }
+    #val{
+        padding-left: 20px;
+        height: 40px;
+        width: 230px;
+    }
+    #sub{
+        height: 40px;
+        width: 80px;
+    }
+    .show p{
+        margin-top: 0px;
+        margin-bottom: 0px;
+        color: grey;
+        padding-left: 15px;
+    }
+</style>
+    <div class="container details">
+        <h1 class="title"> Advance Search Tv Shows </h1>
+            <form class="Add" method="POST" action="{{url_for('advance_search_tvshows')}}">
+
+            TV Show ID: <input type="text" name="tvshow_id" placeholder="Enter TvShow ID" >
+            <br/><br/>
+            TV Show Name: <input id="movie_title" type="text" name="tvshow_title" placeholder="Enter TvShow Title" onkeyup="checkTitle(this)">
+            <div class="show" id ="show_title"></div>
+            <br/><br/>
+            TV Show Episode Count: <input type="text" name="tvshow_episode_count" placeholder=">=50"> (Symbol and numbers must be entered with no spaces between them)
+            <br/><br/>
+            TV Show Genre: <input id="movie_genre" type="text" name="tvshow_genre" placeholder="Enter TvShow Genre" onkeyup="checkMovieGenre(this)">
+            <div class="show" id ="show_genre"></div>
+            <br/><br/><br/>
+            <button class="flat" type="submit">Search</button>
+
+            </form>
+    </div>
+            {% if tvshows | length > 0 %}
+                <!-- All Songs -->
+                <table class="styled">
+                    <thead>
+                        <tr>
+                            <td>TV Show ID</td>
+                            <td>TV Show Title</td>
+                            <td>TV Show Episode Count</td>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instance in tvshows %}
+                            <!-- Each row is a link to each individual tvshow page -->
+                            <tr class="clickable-tr" data-href="{{ url_for('single_tvshow', tvshow_id=instance.tvshow_id)}}">
+                                <td style="text-align: center">{{ instance.tvshow_id }}</td>
+                                <td style="text-align: center">{{ instance.tvshow_title }}</td>
+                                <td style="text-align: center">{{ instance.count}}</td>
+
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            {% endif %}
+<script type="text/javascript" >
+
+        var str = "";
+        var show_title = document.getElementById('show_title');
+        var show_genre = document.getElementById('show_genre');
+
+        function checkTitle(btn){
+            console.log("click!")
+            var year = []
+            show_title.style.display='list-item';
+            $.ajax({
+            url: "http://127.0.0.1:5000/getTvShowName",
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                year = data['name'];
+                str = "";
+                let count = 0;
+                if(year.length > 0){
+                    for (let i = 0; i < year.length; i++) {
+                        if(year[i].indexOf(btn.value) !== -1){
+                            count++;
+                            str += '<p>' + year[i] + '</p>';
+                        }
+                    }
+                }
+                if(count === 0){
+                    str = '<p>' + "No related information" + '</p>'
+                }
+
+                show_title.innerHTML= str;
+                var arrayList = show_title.getElementsByTagName("p");
+                for (let i = 0; i < arrayList.length && count !== 0; i++) {
+                    arrayList[i].addEventListener('click',function(){
+                    btn.value=arrayList[i].innerText;
+                });
+                }
+
+                str = "";
+            },
+
+
+        })
+
+
+        }
+
+        function checkMovieGenre(btn){
+            console.log("click!")
+            var movies = []
+            show_genre.style.display='list-item';
+            $.ajax({
+            url: "http://127.0.0.1:5000/getTvShowGenre",
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                movies = data['name'];
+                str = "";
+                let count = 0;
+                if(movies.length > 0){
+                    for (let i = 0; i < movies.length; i++) {
+                        if(movies[i].indexOf(btn.value) !== -1){
+                            count++;
+                            str += '<p>' + movies[i] + '</p>';
+                        }
+                    }
+                }
+                if(count === 0){
+                    str = '<p>' + "No related information" + '</p>'
+                }
+
+                show_genre.innerHTML= str;
+                var arrayList = show_genre.getElementsByTagName("p");
+                for (let i = 0; i < arrayList.length && count !== 0; i++) {
+                    arrayList[i].addEventListener('click',function(){
+                    btn.value=arrayList[i].innerText;
+                });
+                }
+
+                str = "";
+            },
+
+
+        })
+
+
+        }
+
+
+
+        var the_genre_box = document.getElementById("movie_genre")
+        the_genre_box.onblur = function (){
+            setTimeout("clear(show_genre)", 1000)
+        }
+
+        var the_title_box = document.getElementById("movie_title")
+        the_title_box.onblur = function (){
+            setTimeout("clear(show_title)", 1000)
+        }
+
+
+
+        function clear(element) {
+            str = "";
+            element.innerHTML= str;
+            element.style.display= 'none';
+        }
+
+
+    </script>
+</div>
+
+{% include 'bottom.html'%}
+</html>
